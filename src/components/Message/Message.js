@@ -3,3 +3,5 @@ const Message = () => {
     <>Message</>
   )
 }
+
+export default Message;
