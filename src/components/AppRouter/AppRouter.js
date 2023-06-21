@@ -6,9 +6,10 @@ import { FirebaseContex } from "../../contex/contex";
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 const AppRouter = () => {
+  
   const { auth } = React.useContext(FirebaseContex);
   const [user] = useAuthState(auth);
-  console.log(user)
+
   return user ?
     (
       <Routes>
