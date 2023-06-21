@@ -4,6 +4,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import styles from './Chat.module.css'
 import { Button, TextField, Container, Grid, Avatar } from "@mui/material";
 import { collection, addDoc, serverTimestamp, query, onSnapshot, orderBy } from 'firebase/firestore';
+import Message from "../Message/Message";
+import { v4 as uuidv4 } from 'uuid';
 
 const Chat = () => {
 
@@ -22,14 +24,17 @@ const Chat = () => {
         messagesCollection.push(doc.data());
       });
       setMessages(messagesCollection);
-      if (chatRef.current) {
-        chatRef.current.scrollIntoView();
-      }
     });
     return () => {
       unsubscribe()
     }
   }, [])
+
+  React.useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollIntoView();
+    }
+  }, [messages])
 
   const sendMessage = async () => {
     try {
@@ -39,61 +44,53 @@ const Chat = () => {
         photoURL: user.photoURL,
         text: value,
         createdAt: serverTimestamp(),
+        id: uuidv4()
       });
-      setValue('')
+      setValue('');
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   }
 
   const handleEnterClick = (e) => {
-    if(e.key === 'Enter' && value !== ''){
+    if (e.key === 'Enter' && value !== '') {
       sendMessage();
     }
   }
 
-
   return (
-    <Container>
-      <Grid container
-        justify={"center"}
-        style={{ height: window.innerHeight - 50, marginTop: 20 }}>
-        <div style={{ width: '80%', height: '60vh', border: '1px solid gray', overflowY: 'auto' }}>
-          {messages.length && messages.map(message =>
-            <div style={{
-              margin: 10,
-              border: user.uid === message.uid ? '2px solid green' : '2px dashed red',
-              marginLeft: user.uid === message.uid ? 'auto' : '10px',
-              width: 'fit-content',
-              padding: 5,
-            }}>
-              <Grid container>
-                <Avatar src={message.photoURL} />
-                <div>{message.displayName}</div>
-              </Grid>
-              <div>{message.text}</div>
-            </div>
-          )}
-          <div ref={chatRef}></div>
-        </div>
-        <Grid
-          container
-          direction={"column"}
-          alignItems={"flex-end"}
-          style={{ width: '80%' }}
+    <Grid
+      container
+      direction={"column"}
+      alignItems={"center"}
+      className={styles.chat}
+      style={{ width: "80%" }}>
+      <div className={styles.chat__box} >
+        {messages.length && messages.map(message => <Message message={message} user={user} key={message.id}/>)}
+        <div ref={chatRef}></div>
+      </div>
+      <Grid
+        container
+        direction={"row"}
+        className={styles.chat__input}
+      >
+        <TextField
+          className={styles.chat__inputArea}
+          rowsmax={2}
+          variant={"outlined"}
+          value={value}
+          onChange={e => setValue(e.target.value)}
+          onKeyDown={handleEnterClick}
+        />
+        <Button
+          onClick={sendMessage}
+          variant={"outlined"}
+          className={styles.chat__inputButton}
         >
-          <TextField
-            fullWidth
-            rowsmax={2}
-            variant={"outlined"}
-            value={value}
-            onChange={e => setValue(e.target.value)}
-            onKeyDown={handleEnterClick}
-          />
-          <Button onClick={sendMessage} variant={"outlined"}>Отправить</Button>
-        </Grid>
+          Send
+        </Button>
       </Grid>
-    </Container>
+    </Grid>
   )
 }
 
