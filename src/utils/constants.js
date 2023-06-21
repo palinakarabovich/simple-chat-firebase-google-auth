@@ -1,5 +1,5 @@
-export const LOGIN_ROUTE = '/login'
-export const CHAT_ROUTE = '/chat'
+export const LOGIN_ROUTE = '/simple-chat-firebase-google-auth/login'
+export const CHAT_ROUTE = '/simple-chat-firebase-google-auth/chat'
 
 export const firebaseConfig = {
   apiKey: "AIzaSyB-6a3ZdYYykrf1PE35mX9fWy8dzoVe9Ck",
