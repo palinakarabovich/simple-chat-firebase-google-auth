@@ -64,8 +64,8 @@ const Chat = () => {
       direction={"column"}
       alignItems={"center"}
       className={styles.chat}
-      style={{ width: "80%" }}>
-      <div className={styles.chat__box} >
+      style={{ width: "80%"}}>
+      <div className={styles.chat__box} style={{ overflowY: 'scroll', maxHeight: '400px' }}>
         {messages.length && messages.map(message => <Message message={message} user={user} key={message.id}/>)}
         <div ref={chatRef}></div>
       </div>
