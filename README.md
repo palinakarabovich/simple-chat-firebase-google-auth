@@ -9,6 +9,7 @@ Real-time chat based on Firebase. Sign in and leave you message.
 * Firebase Google authorization
 * Firebase database
 * Mui
+* React-content-loader
 
 ## Available Scripts
 
