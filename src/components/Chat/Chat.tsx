@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import { FirebaseContex } from "../../contex/contex";
 import { useAuthState } from "react-firebase-hooks/auth";
 import styles from './Chat.module.css'
@@ -7,22 +7,23 @@ import { collection, addDoc, serverTimestamp, query, onSnapshot, orderBy } from 
 import Message from "../Message/Message";
 import { v4 as uuidv4 } from 'uuid';
 import MessageSkeleton from "../Skeleton/Skeleton";
+import { messageValues } from "../../types/types";
 
 const Chat = () => {
 
   const { auth, db } = React.useContext(FirebaseContex);
   const [user] = useAuthState(auth);
-  const [value, setValue] = React.useState('');
-  const chatRef = React.useRef();
-  const [messages, setMessages] = React.useState([]);
+  const [value, setValue] = React.useState<string>('');
+  const chatRef = React.useRef<HTMLDivElement>(null);
+  const [messages, setMessages] = React.useState<Array<messageValues>>([]);
 
   const q = query(collection(db, "messages"), orderBy("createdAt"));
 
   React.useEffect(() => {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const messagesCollection = [];
+      const messagesCollection: Array<messageValues> = [];
       querySnapshot.forEach((doc) => {
-        messagesCollection.push(doc.data());
+        messagesCollection.push(doc.data() as messageValues);
       });
       setMessages(messagesCollection);
     });
@@ -38,22 +39,24 @@ const Chat = () => {
   }, [messages])
 
   const sendMessage = async () => {
-    try {
-      const docRef = await addDoc(collection(db, "messages"), {
-        uid: user.uid,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        text: value,
-        createdAt: serverTimestamp(),
-        id: uuidv4()
-      });
-      setValue('');
-    } catch (e) {
-      console.error("Error adding document: ", e);
+    if(user){
+      try {
+        const docRef = await addDoc(collection(db, "messages"), {
+          uid: user.uid,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          text: value,
+          createdAt: serverTimestamp(),
+          id: uuidv4()
+        } as messageValues);
+        setValue('');
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
     }
   }
 
-  const handleEnterClick = (e) => {
+  const handleEnterClick = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter' && value !== '') {
       sendMessage();
     }
@@ -89,7 +92,6 @@ const Chat = () => {
       >
         <TextField
           className={styles.chat__inputArea}
-          rowsmax={2}
           variant={"outlined"}
           value={value}
           onChange={e => setValue(e.target.value)}

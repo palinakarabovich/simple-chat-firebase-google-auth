@@ -1,8 +1,10 @@
+import React from 'react';
+import { messageProps } from '../../types/types';
 import styles from './Message.module.css'
 
-const Message = ({ message, user, similarName }) => {
+const Message: React.FC<messageProps> = ({ message, user, similarName }) => {
 
-  const myMessage = message.uid === user.uid ? true : false;
+  const myMessage = message.uid === user?.uid ? true : false;
 
   return (
     <div className={styles.wrapper} style={myMessage ? { alignSelf: 'flex-end'} : { alignSelf: 'flex-start' }}> 

@@ -7,7 +7,7 @@ import { FirebaseContex } from '../../contex/contex';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Loader from '../Loader/Loader';
 
-function App() {
+const App : React.FC = () => {
 
   const { auth } = React.useContext(FirebaseContex);
   const [user, loading] = useAuthState(auth);

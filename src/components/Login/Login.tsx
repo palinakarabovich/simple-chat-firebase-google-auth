@@ -6,13 +6,13 @@ import React from "react";
 import { FirebaseContex } from "../../contex/contex";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
-const Login = () => {
+const Login: React.FC = () => {
 
   const { auth } = React.useContext(FirebaseContex)
 
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
-    const { user } = await signInWithPopup(auth, provider)
+    await signInWithPopup(auth, provider)
   }
   return (
     <Box className={styles.centerContainer} >
