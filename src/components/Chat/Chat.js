@@ -2,10 +2,11 @@ import React from "react";
 import { FirebaseContex } from "../../contex/contex";
 import { useAuthState } from "react-firebase-hooks/auth";
 import styles from './Chat.module.css'
-import { Button, TextField, Container, Grid, Avatar } from "@mui/material";
+import { Button, TextField, Grid } from "@mui/material";
 import { collection, addDoc, serverTimestamp, query, onSnapshot, orderBy } from 'firebase/firestore';
 import Message from "../Message/Message";
 import { v4 as uuidv4 } from 'uuid';
+import MessageSkeleton from "../Skeleton/Skeleton";
 
 const Chat = () => {
 
@@ -66,7 +67,11 @@ const Chat = () => {
       className={styles.chat}
       style={{ width: "80%" }}>
       <div className={styles.chat__box} >
-        {messages.length && messages.map(message => <Message message={message} user={user} key={message.id} />)}
+        {messages.length > 0 ?
+          messages.map(message => <Message message={message} user={user} key={message.id} />)
+          :
+          [...new Array(8)].map((_, index) => <div className={styles.skeleton} key={index} style={index % 2 === 0 ? { alignSelf: 'flex-end'} : { alignSelf: 'flex-start' }}><MessageSkeleton /></div>)
+        }
         <div ref={chatRef}></div>
       </div>
       <Grid
