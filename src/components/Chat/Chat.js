@@ -68,9 +68,17 @@ const Chat = () => {
       style={{ width: "80%" }}>
       <div className={styles.chat__box} >
         {messages.length > 0 ?
-          messages.map(message => <Message message={message} user={user} key={message.id} />)
+          (messages.map((message, index) => {
+            if(index === 0){
+              return <Message message={message} user={user} key={message.id} similarName={false} />
+            }
+            else {
+              const previousName = message.displayName === messages[index - 1].displayName ? true : false;
+              return <Message message={message} user={user} key={message.id} similarName={previousName} />
+            }
+          }))
           :
-          [...new Array(8)].map((_, index) => <div className={styles.skeleton} key={index} style={index % 2 === 0 ? { alignSelf: 'flex-end'} : { alignSelf: 'flex-start' }}><MessageSkeleton /></div>)
+          [...new Array(8)].map((_, index) => <div className={styles.skeleton} key={index} style={index % 2 === 0 ? { alignSelf: 'flex-end' } : { alignSelf: 'flex-start' }}><MessageSkeleton /></div>)
         }
         <div ref={chatRef}></div>
       </div>

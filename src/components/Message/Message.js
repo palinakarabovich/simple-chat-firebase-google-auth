@@ -1,13 +1,14 @@
-import { useAuthState } from 'react-firebase-hooks/auth';
 import styles from './Message.module.css'
 
-const Message = ({ message, user }) => {
+const Message = ({ message, user, similarName }) => {
 
   const myMessage = message.uid === user.uid ? true : false;
 
   return (
     <div className={styles.wrapper} style={myMessage ? { alignSelf: 'flex-end'} : { alignSelf: 'flex-start' }}> 
-    <p className={styles.name} style={myMessage ? {} : {textAlign: 'left'}}>{message.displayName}</p>
+    {
+      !similarName && <p className={styles.name} style={myMessage ? {} : {textAlign: 'left'}}>{message.displayName}</p>
+    }
       <div className={styles.message} style={myMessage ? {backgroundColor: 'transparent', border: '1px solid  rgba(195, 195, 195, .2)' } : {}}>
         {
           myMessage ?
